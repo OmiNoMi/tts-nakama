@@ -1,0 +1,80 @@
+{
+  "voice": {
+    "type": "dropdown",
+    "value": "Microsoft Zira - English (United States)",
+    "options": {
+      "Microsoft Zira - English (United States)": "Microsoft Zira - English (United States)",
+      "Microsoft Mark - English (United States)": "Microsoft Mark - English (United States)",
+      "Microsoft David - English (United States)": "Microsoft David - English (United States)",
+      "Microsoft Raul - Spanish (Mexico)": "Microsoft Raul - Spanish (Mexico)",
+      "Microsoft Sabina - Spanish (Mexico)": "Microsoft Sabina - Spanish (Mexico)",
+      "Microsoft Helena - Spanish (Spain)": "Microsoft Helena - Spanish (Spain)",
+      "Microsoft Laura - Spanish (Spain)": "Microsoft Laura - Spanish (Spain)",
+      "Microsoft Pablo - Spanish (Spain)": "Microsoft Pablo - Spanish (Spain)"
+    }
+  },
+  "volume": {
+    "type": "dropdown",
+    "value": "1",
+    "label": "Volume",
+    "options": {
+      "1": "High",
+      "0.75": "Normal",
+      "0.5": "Low",
+      "0.25": "Very low",
+      "0": "Muted"
+    }
+  },
+  "playOnReward": {
+  	"type": "checkbox",
+    "value": "0",
+    "label": "Play sound on channel reward"
+  },
+  "rewardId": {
+  	"type": "text",
+    "label": "Channel reward ID"
+  },
+  "playOnCommand": {
+  	"type": "checkbox",
+    "value": "0",
+    "label": "Play sound on chat command"
+  },
+  "commandPrefix": {
+  	"type": "text",
+    "value": "!tts",
+    "label": "Command prefix"
+  },
+  "playOnBits": {
+  	"type": "checkbox",
+    "value": "0",
+    "label": "Play sound on bits"
+  },
+  "minBits": {
+  	"type": "number",
+    "value": 1,
+    "label": "Min bits"
+  },
+  "maxBits": {
+  	"type": "number",
+    "value": 0,
+    "label": "Max bits"
+  },
+  "showImages": {
+  	"type": "checkbox",
+    "value": "0",
+    "label": "Show images to speak"
+  },
+  "imageIdle": {
+     "type": "image-input",
+     "label": "Image (Idle)"
+   },
+  "imageSpeak": {
+     "type": "image-input",
+     "label": "Image (Speak)"
+   },
+  "muteBrowser": {
+    "type": "checkbox",
+    "value": "0",
+    "label": "Only play sounds in OBS"
+  }
+}
