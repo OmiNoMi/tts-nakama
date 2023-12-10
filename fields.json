@@ -25,6 +25,11 @@
       "0": "Muted"
     }
   },
+  "playOnMessage": {
+  	"type": "checkbox",
+    "value": "0",
+    "label": "Play sound on each channel message"
+  },
   "playOnReward": {
   	"type": "checkbox",
     "value": "0",
