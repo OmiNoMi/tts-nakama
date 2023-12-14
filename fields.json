@@ -49,6 +49,11 @@
     "value": "!tts",
     "label": "Command prefix"
   },
+  "playOnEmulatedBits": {
+  	"type": "checkbox",
+    "value": "0",
+    "label": "Play sound on emulated bits"
+  },
   "playOnBits": {
   	"type": "checkbox",
     "value": "0",
