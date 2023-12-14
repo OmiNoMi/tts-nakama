@@ -9,7 +9,7 @@ var settings = {
   playOnCommand: stringToBool("{{playOnCommand}}"),
   commandPrefix: "{{commandPrefix}}",
   playOnBits: stringToBool("{{playOnBits}}"),
-  playOnEmulatedTips: stringToBool("{{playOnEmulatedTips}}"),
+  playOnEmulatedBits: stringToBool("{{playOnEmulatedBits}}"),
   minBits: parseInt("{{minBits}}"),
   maxBits: parseInt("{{maxBits}}"),
   showImages: stringToBool("{{showImages}}")
@@ -143,7 +143,14 @@ function processTwitchEvent(event) {
     return;
   }
 
-  if (settings.playOnBits && isValidTwitchBit(event)) {
+  console.log(event);
+  if (settings.playOnBits && isValidTwitchBit(event, false)) {
+  	playSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
+    return;
+  }
+  
+  
+  if (settings.playOnEmulatedBits && isValidTwitchBit(event, true)) {
   	playSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
     return;
   }
@@ -170,12 +177,13 @@ function isValidTwitchCommand(event) {
 }
 
 // Return true if the event is a valid twitch bit.
-function isValidTwitchBit(event) {
-  return event.type === 'cheer' 
+function isValidTwitchBit(event, isMocked) {
+  return event.type === 'cheer'
   	&& typeof(event.data.amount) === 'number' && event.data.amount >= settings.minBits 
   	&& (event.data.amount <= settings.maxBits || settings.maxBits === 0)
     && typeof(event.data.message) === 'string'
   	&& event.data.message.replace(bitsRegularExpression, '').replace(/ /g, '').length > 0
+  	&& (isMocked === false && !event.isMock || isMocked === true && event.isMock);
 }
 
 // Get the prefix of the twitch chat command.
