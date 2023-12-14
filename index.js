@@ -173,7 +173,6 @@ function processTwitchEvent(event) {
     return;
   }
 
-  console.log(event);
   if (settings.playOnBits && isValidTwitchBit(event, false)) {
   	enqueueSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
     return;
