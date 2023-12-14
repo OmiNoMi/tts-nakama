@@ -7,10 +7,6 @@
   display: none;
 }
 
-.image-idle {
-  opacity: 40%;
-}
-
 .image-speak {
   top: 0;
   left: 0;
