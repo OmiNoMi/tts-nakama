@@ -28,6 +28,20 @@ var message = new SpeechSynthesisUtterance("");
 
 var voices = [];
 
+// This object purpose storing all the state of the application,
+// it means, all that variables that represents what is happening.
+var state = {
+  // True if a sound is being played
+  // Used by queue interval to only play
+  // when no sounds are active.
+ playing: false
+};
+
+// Stores all messages pending to being sent.
+// Queue ensures that no messages are lost by concurrency
+// and each message is sent consequently.
+var queue = [];
+
 setupImages();
 
 setupBadWords();
@@ -42,6 +56,7 @@ var devSettings = {
 log('setup', "Selected voice: " + settings.selectedVoice);
 log('setup', "Debug: " + (settings.debug ? "Yes" : "No"));
 
+// WHen voices are loaded set them up!
 speechSynthesis.onvoiceschanged = function () {
   	log('setup', 'Getting voices...');
   	voices = speechSynthesis.getVoices(); 
@@ -52,6 +67,7 @@ speechSynthesis.onvoiceschanged = function () {
     }
 };
 
+// When voices are received, process them!
 window.addEventListener('onEventReceived', function (obj) {
   if (typeof(obj.detail) === 'object' && typeof(obj.detail.event) === 'object') {
     var objEvent = obj.detail.event;
@@ -60,6 +76,15 @@ window.addEventListener('onEventReceived', function (obj) {
     }
   }
 });
+
+// Interval to manage the sounds queue.
+setInterval(function () {
+  if (!state.playing && queue.length > 0) {
+    var message = queue.shift();
+    state.playing = true;
+    playSound(message);
+  }
+}, 100);
 
 // Converts the passed string to boolean.
 function stringToBool(stringData) {
@@ -107,6 +132,11 @@ function setupVolume() {
   log('setup', "Volume: " + message.volume);
 }
 
+// Enqueue a message to be played.
+function enqueueSound(message) {
+   queue.push(message);
+}
+
 // Spoke a text by using text to speech.
 function playSound(text) {
   if ((!settings.muteBrowser || isOBS()) && !containsBannableWords(text.toLowerCase())) {
@@ -128,30 +158,30 @@ function isOBS() {
 // Process any event coming from twitch.
 function processTwitchEvent(event) {
   if (settings.playOnMessage && isValidTwitchMessage(event)) {
-    playSound(event.renderedText.toLowerCase().replace(bitsRegularExpression, ''));
+    enqueueSound(event.renderedText.toLowerCase().replace(bitsRegularExpression, ''));
     return;
   }
 
   if (settings.playOnReward && isValidTwitchRewardReedem(event)) {
-    playSound(event.data.text);
+    enqueueSound(event.data.text);
     return;
   }
 
   if (settings.playOnCommand && isValidTwitchCommand(event)) {
     // Only replace first time it appears !tts.
-    playSound(event.data.text.replace(getCommandPrefix(), ''));
+    enqueueSound(event.data.text.replace(getCommandPrefix(), ''));
     return;
   }
 
   console.log(event);
   if (settings.playOnBits && isValidTwitchBit(event, false)) {
-  	playSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
+  	enqueueSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
     return;
   }
   
   
   if (settings.playOnEmulatedBits && isValidTwitchBit(event, true)) {
-  	playSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
+  	enqueueSound(event.data.message.toLowerCase().replace(bitsRegularExpression, ''));
     return;
   }
 }
@@ -211,6 +241,7 @@ function onSpeakStarts() {
 function onSpeakEnds() {
   getSpeakImage().classList.add('hidden');
   getIdleImage().classList.remove('hidden');
+  state.playing = false;
 }
 
 // Check if the text is safe to be played on tts.
